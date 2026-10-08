@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1e1e1c">
+  <meta name="description" content="Small-group cave and lake adventures in the Nordic wild. Find your way out there with Travis&Co.">
+  <title>Travis&Co — We take you to the cave!</title>
+
+  <!-- Bootstrap supplies a reliable responsive grid; the visual system below is custom. -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Core palette and dimensions are centralized to make brand adjustments straightforward. */
+    :root {
+      --ink: #1e1e1c;
+      --olive: #797e2a;
+      --clay: #b8885a;
+      --paper: #fff;
+      --pale: #f8f8b4;
+      --mist: #efefe6;
+      --line: rgba(30, 30, 28, .18);
+      --mono: "DM Mono", "Courier New", monospace;
+      --sans: "DM Sans", Arial, sans-serif;
+      --display: "Space Grotesk", "Arial Narrow", sans-serif;
+      --rail: 88px;
+      --bar: 64px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 26px; }
+    body { margin: 0; padding-left: var(--rail); padding-bottom: var(--bar); color: var(--ink); background: var(--paper); font-family: var(--sans); }
+    a { color: inherit; }
+    a:focus-visible, button:focus-visible { outline: 3px solid var(--clay); outline-offset: 4px; }
+    button { font: inherit; }
+    ::selection { color: var(--ink); background: var(--pale); }
+
+    /* A narrow fixed rail gives the desktop layout its workshop / field-journal character. */
+    .side-rail {
+      position: fixed; inset: 0 auto 0 0; z-index: 50; width: var(--rail);
+      display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+      padding: 22px 12px; color: var(--paper); background: var(--ink);
+    }
+    .brand-mark { color: var(--pale); font: 700 17px/1 var(--display); letter-spacing: -.08em; text-decoration: none; writing-mode: vertical-rl; transform: rotate(180deg); }
+    .rail-links { display: flex; flex-direction: column; gap: 25px; align-items: center; }
+    .rail-links a { color: #e5e4d9; font: 10px var(--mono); letter-spacing: .08em; text-decoration: none; text-transform: uppercase; writing-mode: vertical-rl; transform: rotate(180deg); transition: color .2s ease; }
+    .rail-links a:hover, .rail-links a[aria-current="page"] { color: var(--pale); }
+    .rail-social { display: grid; gap: 15px; }
+    .rail-social a { color: var(--paper); font-size: 13px; transition: color .2s ease; }
+    .rail-social a:hover { color: var(--pale); }
+    .mobile-top { display: none; }
+
+    /* Persistent bottom action bar remains reachable without covering page content. */
+    .bottom-bar {
+      position: fixed; z-index: 40; right: 0; bottom: 0; left: var(--rail); min-height: var(--bar);
+      display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 10px 4.2%;
+      color: var(--paper); background: var(--olive);
+    }
+    .bottom-note { margin: 0; font: 11px var(--mono); letter-spacing: .04em; }
+    .bottom-note strong { color: var(--pale); font-weight: 500; }
+    .bottom-links { display: flex; align-items: center; gap: 22px; }
+    .bottom-links a { color: white; font: 10px var(--mono); text-decoration: none; text-transform: uppercase; }
+    .bottom-links a:hover { color: var(--pale); }
+    .bottom-cta { display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; color: var(--ink)!important; background: var(--pale); font-weight: 500!important; transition: transform .2s ease, background .2s ease; }
+    .bottom-cta:hover { background: white; transform: translateY(-2px); }
+
+    .eyebrow { display: flex; align-items: center; gap: 10px; margin: 0 0 17px; color: var(--olive); font: 11px var(--mono); letter-spacing: .13em; text-transform: uppercase; }
+    .eyebrow::before { width: 25px; height: 1px; background: currentColor; content: ""; }
+    .section-heading { margin: 0; font: 600 clamp(2.3rem, 5vw, 5rem)/.98 var(--display); letter-spacing: -.065em; }
+    .section-intro { max-width: 540px; margin: 22px 0 0; color: #55554e; font-size: 16px; line-height: 1.7; }
+    .section-wrap { padding: clamp(66px, 8vw, 112px) 7.3%; }
+    .section-topline { display: flex; justify-content: space-between; align-items: end; gap: 30px; margin-bottom: 42px; }
+    .index-tag { color: #77776f; font: 11px var(--mono); letter-spacing: .08em; }
+    .text-link { display: inline-flex; align-items: center; gap: 12px; color: var(--ink); font: 11px var(--mono); letter-spacing: .06em; text-decoration: none; text-transform: uppercase; border-bottom: 1px solid var(--ink); padding-bottom: 7px; }
+    .text-link i { transition: transform .2s ease; }
+    .text-link:hover i { transform: translateX(5px); }
+    .button-olive { display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 15px 19px; border: 1px solid var(--olive); color: white; background: var(--olive); font: 11px var(--mono); letter-spacing: .05em; text-decoration: none; text-transform: uppercase; transition: color .2s ease, background .2s ease; }
+    .button-olive:hover { color: var(--olive); background: transparent; }
+
+    /* Hero photo is intentionally high-contrast with a subtle parallax shift on scroll. */
+    .hero {
+      position: relative; min-height: min(810px, 92svh); display: flex; align-items: end; overflow: hidden;
+      padding: 8% 8% 7%; color: white; background: var(--ink);
+    }
+    .hero::before { position: absolute; inset: -5% 0; background: linear-gradient(90deg, rgba(13,16,12,.72), rgba(13,16,12,.08) 78%), linear-gradient(0deg, rgba(13,16,12,.5), transparent 60%), url("https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=2200&q=85") center 48%/cover; content: ""; transform: translate3d(0, var(--hero-shift, 0px), 0); will-change: transform; }
+    .hero::after { position: absolute; inset: 0; opacity: .12; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E"); content: ""; pointer-events: none; }
+    .hero-content { position: relative; z-index: 1; width: min(850px, 100%); }
+    .hero-kicker { margin: 0 0 22px; color: var(--pale); font: 11px var(--mono); letter-spacing: .16em; text-transform: uppercase; }
+    .hero h1 { max-width: 850px; margin: 0; font: 600 clamp(4rem, 10vw, 9.4rem)/.82 var(--display); letter-spacing: -.09em; }
+    .hero h1 span { color: var(--pale); }
+    .hero-bottom { display: flex; align-items: end; justify-content: space-between; gap: 25px; margin-top: 38px; }
+    .hero-bottom p { max-width: 360px; margin: 0; color: #f0efe7; font-size: 14px; line-height: 1.65; }
+    .hero-stamp { align-self: end; color: white; font: 10px var(--mono); letter-spacing: .1em; text-align: right; text-transform: uppercase; }
+    .hero-stamp i { display: block; margin-bottom: 10px; color: var(--pale); font-size: 22px; }
+    .hero-scroll { position: absolute; z-index: 2; top: 11%; right: 7%; writing-mode: vertical-rl; color: white; font: 10px var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+
+    .ticker { overflow: hidden; padding: 16px 0; color: var(--ink); background: var(--pale); }
+    .ticker-track { display: flex; width: max-content; animation: ticker 34s linear infinite; }
+    .ticker-track span { padding: 0 22px; font: 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; }
+    .ticker-track i { padding-left: 42px; color: var(--olive); }
+    @keyframes ticker { to { transform: translateX(-50%); } }
+
+    /* Staggered masonry-like trip cards use varied heights but align to a shared grid. */
+    .trips-section { background: #f5f5ef; }
+    .trip-grid { display: grid; grid-template-columns: 1.12fr .88fr; gap: 22px; align-items: start; }
+    .trip-column { display: grid; gap: 22px; }
+    .trip-card { position: relative; min-height: 300px; overflow: hidden; color: white; background: #34372d; }
+    .trip-card.tall { min-height: 628px; }
+    .trip-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .55s cubic-bezier(.2,.7,.2,1); }
+    .trip-card:hover img { transform: scale(1.045); }
+    .trip-card::after { position: absolute; inset: 25% 0 0; background: linear-gradient(0deg, rgba(17,19,15,.83), transparent); content: ""; }
+    .trip-card-content { position: absolute; z-index: 1; right: 25px; bottom: 24px; left: 25px; }
+    .trip-meta { display: flex; justify-content: space-between; margin-bottom: 10px; color: var(--pale); font: 10px var(--mono); letter-spacing: .07em; text-transform: uppercase; }
+    .trip-card h3 { margin: 0 0 8px; font: 600 clamp(1.7rem, 3vw, 2.7rem)/1 var(--display); letter-spacing: -.05em; }
+    .trip-card p { max-width: 390px; margin: 0; color: #f2f1e9; font-size: 13px; line-height: 1.55; }
+    .trip-card .trip-arrow { position: absolute; right: 0; bottom: 0; display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid rgba(255,255,255,.7); border-radius: 50%; color: white; text-decoration: none; }
+
+    .about-section { display: grid; grid-template-columns: .9fr 1.1fr; gap: 8%; align-items: center; }
+    .about-photo { position: relative; min-height: 560px; background: #d5d5c8; }
+    .about-photo img { width: 100%; height: 560px; object-fit: cover; }
+    .photo-label { position: absolute; right: -19px; bottom: 22px; padding: 14px 17px; color: var(--paper); background: var(--olive); font: 10px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .about-copy .section-heading { max-width: 550px; }
+    .about-copy > p:not(.eyebrow) { color: #55554e; font-size: 15px; line-height: 1.75; }
+    .about-copy .section-intro { margin-bottom: 22px; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 33px 0; padding: 23px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .stat strong { display: block; font: 600 30px var(--display); letter-spacing: -.05em; }
+    .stat span { color: #68685e; font: 9px var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+
+    .people-section { color: white; background: var(--ink); }
+    .people-section .eyebrow { color: var(--pale); }
+    .people-section .section-intro { color: #c9c8bd; }
+    .people-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .person { border-top: 1px solid #57574e; }
+    .person img { width: 100%; aspect-ratio: 1/1.08; object-fit: cover; filter: saturate(.72); }
+    .person-info { display: flex; justify-content: space-between; align-items: start; gap: 10px; padding: 17px 0 0; }
+    .person h3 { margin: 0; font: 500 20px var(--display); }
+    .person p { margin: 5px 0 0; color: #bebdb3; font: 10px var(--mono); text-transform: uppercase; }
+    .person-info i { color: var(--pale); font-size: 12px; }
+
+    .places-section { background: var(--mist); }
+    .places-layout { display: grid; grid-template-columns: 1fr .85fr; gap: 8%; }
+    .place-list { border-top: 1px solid var(--line); }
+    .place-item { display: grid; grid-template-columns: 48px 1fr auto; gap: 16px; align-items: center; padding: 20px 0; border-bottom: 1px solid var(--line); }
+    .place-item .place-no { color: var(--olive); font: 11px var(--mono); }
+    .place-item h3 { margin: 0; font: 500 20px var(--display); }
+    .place-item p { margin: 4px 0 0; color: #68685e; font-size: 12px; }
+    .place-item i { color: var(--olive); }
+    .map-frame { min-height: 410px; border: 0; filter: grayscale(.9) sepia(.12); }
+    .map-caption { display: flex; justify-content: space-between; margin-top: 12px; color: #68685e; font: 9px var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+
+    .gallery-section { background: white; }
+    .gallery-grid { display: grid; grid-template-columns: 1.2fr .8fr 1fr; grid-template-rows: 220px 220px; gap: 12px; }
+    .gallery-item { position: relative; overflow: hidden; padding: 0; border: 0; background: #ddd; cursor: zoom-in; }
+    .gallery-item:first-child { grid-row: span 2; }
+    .gallery-item:nth-child(4) { grid-column: span 2; }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform .45s ease, filter .45s ease; }
+    .gallery-item:hover img { transform: scale(1.04); filter: brightness(.8); }
+    .gallery-item::after { position: absolute; right: 13px; bottom: 12px; color: white; font: 10px var(--mono); text-transform: uppercase; content: attr(aria-label); text-shadow: 0 1px 7px #111; }
+
+    .reviews-section { display: grid; grid-template-columns: .75fr 1.25fr; gap: 8%; align-items: center; background: var(--pale); }
+    .review-card { min-height: 250px; display: flex; flex-direction: column; justify-content: space-between; padding: clamp(25px, 5vw, 54px); background: white; }
+    .review-quote { margin: 0; font: 500 clamp(1.5rem, 3vw, 2.4rem)/1.2 var(--display); letter-spacing: -.04em; }
+    .review-byline { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; color: #66665e; font: 10px var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+    .review-stars { color: var(--olive); letter-spacing: .14em; }
+    .slider-controls { display: flex; gap: 8px; margin-top: 22px; }
+    .slider-controls button { display: grid; width: 41px; height: 41px; place-items: center; border: 1px solid var(--ink); border-radius: 50%; color: var(--ink); background: transparent; transition: color .2s, background .2s; }
+    .slider-controls button:hover { color: white; background: var(--ink); }
+
+    .pricing-section { background: #f5f5ef; }
+    .price-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .price-card { position: relative; padding: 30px 26px; border-right: 1px solid var(--line); }
+    .price-card:last-child { border: 0; }
+    .price-card.featured { color: white; background: var(--olive); }
+    .price-card .plan-label { font: 10px var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+    .price-card h3 { margin: 30px 0 4px; font: 600 29px var(--display); }
+    .price-amount { font: 600 clamp(2.3rem, 4vw, 3.3rem)/1 var(--display); letter-spacing: -.07em; }
+    .price-amount small { font: 11px var(--mono); letter-spacing: 0; }
+    .price-card > p { min-height: 45px; color: #66665e; font-size: 12px; line-height: 1.6; }
+    .price-card.featured > p, .price-card.featured li { color: #f2f0dc; }
+    .price-card ul { min-height: 120px; margin: 22px 0; padding: 0; list-style: none; }
+    .price-card li { margin: 11px 0; color: #4e4e46; font-size: 12px; }
+    .price-card li i { width: 21px; color: var(--olive); }
+    .price-card.featured li i { color: var(--pale); }
+    .price-card .button-olive { width: 100%; }
+    .price-card.featured .button-olive { border-color: var(--pale); color: var(--ink); background: var(--pale); }
+    .price-card.featured .button-olive:hover { color: white; background: transparent; }
+    .price-badge { position: absolute; top: 0; right: 0; padding: 8px 10px; color: var(--ink); background: var(--pale); font: 9px var(--mono); letter-spacing: .05em; text-transform: uppercase; }
+
+    .contact-section { color: white; background: var(--ink); }
+    .contact-section .eyebrow { color: var(--pale); }
+    .contact-grid { display: grid; grid-template-columns: 1fr .8fr; gap: 9%; align-items: end; }
+    .contact-section .section-intro { color: #c9c8bd; }
+    .contact-details { display: grid; gap: 15px; }
+    .contact-details a { color: white; font: 12px var(--mono); text-decoration: none; }
+    .contact-details a:hover { color: var(--pale); }
+    .contact-details i { width: 27px; color: var(--pale); }
+    footer { display: flex; justify-content: space-between; gap: 20px; padding: 21px 7.3%; color: #cccbbf; background: #151513; font: 9px var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+    footer a { color: inherit; text-decoration: none; }
+
+    /* Accessible lightbox: dialog is controlled by native showModal/close methods. */
+    .lightbox { width: min(92vw, 1050px); max-width: none; padding: 0; border: 0; background: #111; color: white; }
+    .lightbox::backdrop { background: rgba(0,0,0,.88); }
+    .lightbox img { display: block; width: 100%; max-height: 82vh; object-fit: contain; }
+    .lightbox-close { position: absolute; top: 12px; right: 12px; display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid white; border-radius: 50%; color: white; background: rgba(0,0,0,.45); }
+    .lightbox figcaption { padding: 12px 16px; font: 10px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .back-top { position: fixed; z-index: 35; right: 22px; bottom: calc(var(--bar) + 18px); display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid var(--ink); color: var(--ink); background: white; opacity: 0; pointer-events: none; transform: translateY(8px); transition: opacity .2s, transform .2s; }
+    .back-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .65s ease, transform .65s cubic-bezier(.2,.7,.2,1); }
+    .reveal.is-visible { opacity: 1; transform: translateY(0); }
+    .reveal[data-delay="1"] { transition-delay: .12s; }
+    .reveal[data-delay="2"] { transition-delay: .24s; }
+    .reveal[data-delay="3"] { transition-delay: .36s; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto!important; animation-duration: .01ms!important; animation-iteration-count: 1!important; transition-duration: .01ms!important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+    @media (max-width: 900px) {
+      :root { --rail: 0px; --bar: 58px; }
+      body { padding: 62px 0 var(--bar); }
+      .side-rail { display: none; }
+      .mobile-top { position: fixed; z-index: 60; top: 0; right: 0; left: 0; height: 62px; display: flex; align-items: center; justify-content: space-between; padding: 0 22px; color: white; background: var(--ink); }
+      .mobile-brand { color: var(--pale); font: 700 19px var(--display); letter-spacing: -.08em; text-decoration: none; }
+      .menu-toggle { display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid #6b6b60; color: white; background: transparent; }
+      .mobile-menu { position: fixed; z-index: 55; top: 62px; right: 0; left: 0; display: grid; gap: 0; padding: 8px 22px 17px; background: var(--ink); transform: translateY(-130%); visibility: hidden; transition: transform .25s ease, visibility .25s; }
+      .mobile-menu.open { transform: translateY(0); visibility: visible; }
+      .mobile-menu a { padding: 13px 0; border-top: 1px solid #4a4a43; color: white; font: 11px var(--mono); letter-spacing: .08em; text-decoration: none; text-transform: uppercase; }
+      .mobile-menu a:hover { color: var(--pale); }
+      .bottom-bar { left: 0; padding: 9px 20px; }
+      .bottom-links a:not(.bottom-cta) { display: none; }
+      .hero { min-height: min(720px, 86svh); }
+      .about-section { grid-template-columns: 1fr 1fr; gap: 6%; }
+      .about-photo, .about-photo img { min-height: 450px; height: 450px; }
+      .places-layout { gap: 5%; }
+      .gallery-grid { grid-template-rows: 180px 180px; }
+    }
+    @media (max-width: 620px) {
+      .section-wrap { padding: 65px 23px; }
+      .section-topline { align-items: start; flex-direction: column; margin-bottom: 28px; }
+      .index-tag { display: none; }
+      .hero { min-height: 680px; min-height: 82svh; padding: 0 24px 52px; }
+      .hero::before { background-position: 56% center; }
+      .hero h1 { font-size: clamp(4.1rem, 19vw, 7rem); }
+      .hero-bottom { align-items: start; flex-direction: column; margin-top: 28px; }
+      .hero-stamp { display: none; }
+      .hero-scroll { top: 25px; right: 24px; }
+      .trip-grid { grid-template-columns: 1fr; gap: 14px; }
+      .trip-column { gap: 14px; }
+      .trip-card, .trip-card.tall { min-height: 400px; }
+      .about-section, .places-layout, .reviews-section, .contact-grid { grid-template-columns: 1fr; gap: 38px; }
+      .about-photo, .about-photo img { min-height: 390px; height: 390px; }
+      .photo-label { right: -8px; }
+      .stats { gap: 7px; }
+      .stat strong { font-size: 25px; }
+      .stat span { font-size: 8px; }
+      .people-grid { grid-template-columns: 1fr 1fr; gap: 25px 14px; }
+      .person img { aspect-ratio: 1/1.12; }
+      .person h3 { font-size: 17px; }
+      .place-item { grid-template-columns: 32px 1fr auto; gap: 10px; }
+      .place-item h3 { font-size: 17px; }
+      .map-frame { min-height: 320px; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: 250px 150px 150px; gap: 8px; }
+      .gallery-item:first-child { grid-row: span 2; }
+      .gallery-item:nth-child(4) { grid-column: span 1; }
+      .gallery-item:nth-child(5) { grid-column: span 2; }
+      .price-grid { grid-template-columns: 1fr; border-bottom: 0; }
+      .price-card { padding: 26px 20px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .price-card ul { min-height: 0; }
+      .price-card > p { min-height: 0; }
+      footer { flex-direction: column; gap: 8px; padding: 20px 23px; }
+      .bottom-note { max-width: 55%; font-size: 9px; line-height: 1.5; }
+      .bottom-cta { padding: 10px; font-size: 9px!important; }
+      .back-top { right: 14px; bottom: calc(var(--bar) + 12px); }
+    }
+  </style>
+<link rel="stylesheet" href="admin-widget/admin.css">
+</head>
+<body>
+  <a class="visually-hidden-focusable position-absolute top-0 start-0 p-3 bg-white" href="#main">Skip to content</a>
+  <header class="mobile-top">
+    <a class="mobile-brand" href="#home" aria-label="Travis and Co home">T&Co.</a>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileMenu">
+      <i class="fa-solid fa-bars" aria-hidden="true"></i>
+    </button>
+  </header>
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation">
+    <a href="#trips">Trips</a><a href="#about">Our story</a><a href="#people">People</a><a href="#places">Places</a><a href="#photos">Photos</a><a href="#contact">Contact</a>
+  </nav>
+  <aside class="side-rail" aria-label="Primary navigation">
+    <a class="brand-mark" href="#home" aria-label="Travis and Co home">T&CO.</a>
+    <nav class="rail-links">
+      <a href="#trips" aria-current="page">Trips</a><a href="#about">About</a><a href="#people">People</a><a href="#places">Places</a><a href="#photos">Photos</a>
+    </nav>
+    <div class="rail-social" aria-label="Social media">
+      <a href="https://instagram.com" aria-label="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
+      <a href="mailto:hello@travisandco.example" aria-label="Email Travis and Co"><i class="fa-regular fa-envelope" aria-hidden="true"></i></a>
+    </div>
+  </aside>
+
+  <main id="main">
+    <section class="hero" id="home" aria-labelledby="hero-title">
+      <a class="hero-scroll" href="#trips">Scroll to explore <i class="fa-solid fa-arrow-down-long ms-2" aria-hidden="true"></i></a>
+      <div class="hero-content">
+        <p class="hero-kicker">Small-group expeditions · Nordic wilderness</p>
+        <h1 id="hero-title">We take<br>you to <span>the cave.</span></h1>
+        <div class="hero-bottom">
+          <p>Leave the usual trail behind. Find quiet lakes, hidden caverns and the good kind of getting lost—with people who know the way.</p>
+          <a class="button-olive" href="#trips">Find your next trip <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+          <div class="hero-stamp"><i class="fa-solid fa-mountain-sun" aria-hidden="true"></i>Wild places<br>since 2014</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="ticker" aria-label="What we do">
+      <div class="ticker-track" aria-hidden="true">
+        <span>Caves worth whispering in <i class="fa-solid fa-asterisk"></i></span><span>Slow miles, big skies <i class="fa-solid fa-asterisk"></i></span><span>Nordic by nature <i class="fa-solid fa-asterisk"></i></span><span>Small groups, wild places <i class="fa-solid fa-asterisk"></i></span>
+        <span>Caves worth whispering in <i class="fa-solid fa-asterisk"></i></span><span>Slow miles, big skies <i class="fa-solid fa-asterisk"></i></span><span>Nordic by nature <i class="fa-solid fa-asterisk"></i></span><span>Small groups, wild places <i class="fa-solid fa-asterisk"></i></span>
+      </div>
+    </div>
+
+    <section class="section-wrap trips-section" id="trips" aria-labelledby="trips-title">
+      <div class="section-topline reveal">
+        <div><p class="eyebrow">01 / Find your kind of wild</p><h2 class="section-heading" id="trips-title">Go a little<br>further out.</h2></div>
+        <span class="index-tag">FIELD NOTES / 2026 SEASON</span>
+      </div>
+      <p class="section-intro reveal" data-delay="1">A good trip isn't about ticking boxes. It's the cold lake dip, the last light in a cave, and the stories you carry home. Choose your pace.</p>
+      <div class="trip-grid mt-5">
+        <article class="trip-card tall reveal" data-delay="1">
+          <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1100&q=85" alt="A lone hiker crossing a wide Nordic mountain landscape" loading="lazy">
+          <div class="trip-card-content"><div class="trip-meta"><span>3 days / Sweden</span><span>From €420</span></div><h3>The limestone loop</h3><p>Follow an old forest track to a cavern that opens onto a turquoise lake. No rush; plenty of campfire.</p><a class="trip-arrow" href="#pricing" aria-label="See Limestone Loop prices"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>
+        </article>
+        <div class="trip-column">
+          <article class="trip-card reveal" data-delay="2">
+            <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=1000&q=85" alt="Cool blue water meeting a rugged northern shoreline" loading="lazy">
+            <div class="trip-card-content"><div class="trip-meta"><span>1 day / Norway</span><span>From €145</span></div><h3>Below the surface</h3><p>A gentle cave walk and a lakeside sauna. A full Nordic reset in one day.</p><a class="trip-arrow" href="#pricing" aria-label="See Below the Surface prices"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>
+          </article>
+          <article class="trip-card reveal" data-delay="3">
+            <img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1000&q=85" alt="Mountain lake surrounded by pine forest at sunset" loading="lazy">
+            <div class="trip-card-content"><div class="trip-meta"><span>2 nights / Sweden</span><span>From €295</span></div><h3>Stillwater camp</h3><p>Pack light, paddle out, sleep under a sky that never quite goes dark.</p><a class="trip-arrow" href="#pricing" aria-label="See Stillwater Camp prices"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-wrap about-section" id="about" aria-labelledby="about-title">
+      <div class="about-photo reveal">
+        <img src="https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=1000&q=85" alt="A red deer standing among birch and pine in a Nordic forest" loading="lazy">
+        <span class="photo-label">Our kind of office / 61° N</span>
+      </div>
+      <div class="about-copy reveal" data-delay="1">
+        <p class="eyebrow">02 / The long way round</p>
+        <h2 class="section-heading" id="about-title">Locals at heart.<br>Curious by nature.</h2>
+        <p class="section-intro">Travis&Co started with a borrowed canoe, a paper map and a question: what if the best bits were just off the trail?</p>
+        <p>Today, we're a small crew of guides, climbers and very enthusiastic soup-makers. We build thoughtful trips into the caves and lake country of the Nordic north—always at a human pace, always with care for the places that let us in.</p>
+        <div class="stats" aria-label="Travis and Co facts">
+          <div class="stat"><strong>12</strong><span>Local guides</span></div><div class="stat"><strong>08</strong><span>Wild seasons</span></div><div class="stat"><strong>8 max</strong><span>Per group</span></div>
+        </div>
+        <a class="text-link" href="#people">Get to know the crew <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      </div>
+    </section>
+
+    <section class="section-wrap people-section" id="people" aria-labelledby="people-title">
+      <div class="section-topline reveal">
+        <div><p class="eyebrow">03 / Good company</p><h2 class="section-heading" id="people-title">Know the way.<br>Make the day.</h2></div>
+        <span class="index-tag">THE PEOPLE OUT FRONT</span>
+      </div>
+      <p class="section-intro reveal" data-delay="1">Our guides know the weather, the shortcuts and when the coffee needs another minute. The rest, we'll figure out together.</p>
+      <div class="people-grid mt-5">
+        <article class="person reveal"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=700&q=80" alt="Portrait of guide Freja Lind" loading="lazy"><div class="person-info"><div><h3>Freja Lind</h3><p>Cave guide / Sweden</p></div><i class="fa-solid fa-compass" aria-hidden="true"></i></div></article>
+        <article class="person reveal" data-delay="1"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=700&q=80" alt="Portrait of guide Oskar Nyberg" loading="lazy"><div class="person-info"><div><h3>Oskar Nyberg</h3><p>Paddle guide / Norway</p></div><i class="fa-solid fa-water" aria-hidden="true"></i></div></article>
+        <article class="person reveal" data-delay="2"><img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=700&q=80" alt="Portrait of trip leader Liv Hansen" loading="lazy"><div class="person-info"><div><h3>Liv Hansen</h3><p>Trip lead / Finland</p></div><i class="fa-solid fa-fire" aria-hidden="true"></i></div></article>
+      </div>
+    </section>
+
+    <section class="section-wrap places-section" id="places" aria-labelledby="places-title">
+      <div class="section-topline reveal">
+        <div><p class="eyebrow">04 / A few favourite coordinates</p><h2 class="section-heading" id="places-title">North, then<br>keep going.</h2></div>
+        <span class="index-tag">SCANDINAVIA / 59–69° N</span>
+      </div>
+      <div class="places-layout">
+        <div class="place-list reveal" data-delay="1">
+          <article class="place-item"><span class="place-no">01</span><div><h3>Höga Kusten, Sweden</h3><p>Granite coast, forest paths & sea caves</p></div><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></article>
+          <article class="place-item"><span class="place-no">02</span><div><h3>Røros, Norway</h3><p>High-country lakes & hidden limestone</p></div><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></article>
+          <article class="place-item"><span class="place-no">03</span><div><h3>Lake Saimaa, Finland</h3><p>Island channels & warm evening light</p></div><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></article>
+          <article class="place-item"><span class="place-no">04</span><div><h3>Jämtland, Sweden</h3><p>Quiet valleys, old-growth pine & caves</p></div><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></article>
+        </div>
+        <div class="reveal" data-delay="2">
+          <iframe class="map-frame w-100" title="Map showing the Nordic regions where Travis and Co trips take place" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=Scandinavia&t=&z=4&ie=UTF8&iwloc=&output=embed"></iframe>
+          <div class="map-caption"><span>Our backyard, more or less</span><span>61° 36′ N / 16° 46′ E</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-wrap gallery-section" id="photos" aria-labelledby="photos-title">
+      <div class="section-topline reveal">
+        <div><p class="eyebrow">05 / Postcards from the field</p><h2 class="section-heading" id="photos-title">Somewhere<br>between here.</h2></div>
+        <span class="index-tag">TAP A FRAME TO TAKE A CLOSER LOOK</span>
+      </div>
+      <div class="gallery-grid reveal" data-delay="1">
+        <button class="gallery-item" type="button" data-image="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1600&q=90" aria-label="Open mountain lake at dusk photo"><img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=900&q=80" alt="Mirror-still mountain lake at dusk" loading="lazy"></button>
+        <button class="gallery-item" type="button" data-image="https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=1600&q=90" aria-label="Open the deep green forest photo"><img src="https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=700&q=80" alt="Sunlight falling through a dense green forest" loading="lazy"></button>
+        <button class="gallery-item" type="button" data-image="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=90" aria-label="Open mountain trail photo"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=700&q=80" alt="Rocky trail winding into a mountain landscape" loading="lazy"></button>
+        <button class="gallery-item" type="button" data-image="https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=1600&q=90" aria-label="Open northern water photo"><img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=900&q=80" alt="Waves rolling onto a northern coast" loading="lazy"></button>
+        <button class="gallery-item" type="button" data-image="https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=1600&q=90" aria-label="Open woodland wildlife photo"><img src="https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=800&q=80" alt="A deer in a woodland clearing" loading="lazy"></button>
+      </div>
+    </section>
+
+    <section class="section-wrap reviews-section" aria-labelledby="reviews-title">
+      <div class="reveal"><p class="eyebrow">The good word</p><h2 class="section-heading" id="reviews-title">Came for<br>the cave.</h2><p class="section-intro">Left with a new favourite place, a few new friends, and a suspicious amount of moss in my bag.</p>
+        <div class="slider-controls"><button id="reviewPrev" type="button" aria-label="Previous review"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></button><button id="reviewNext" type="button" aria-label="Next review"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button></div>
+      </div>
+      <div class="review-card reveal" data-delay="1" aria-live="polite">
+        <p class="review-quote" id="reviewQuote">“I came for the caves. I stayed for the quiet swim, the wild blueberries and the people who somehow made a rainy Tuesday feel like a story.”</p>
+        <div class="review-byline"><span id="reviewName">Maja R. / limestone loop, 2025</span><span class="review-stars" aria-label="5 out of 5 stars">★★★★★</span></div>
+      </div>
+    </section>
+
+    <section class="section-wrap pricing-section" id="pricing" aria-labelledby="pricing-title">
+      <div class="section-topline reveal">
+        <div><p class="eyebrow">Make a little room in your calendar</p><h2 class="section-heading" id="pricing-title">Good days.<br>Clear prices.</h2></div>
+        <span class="index-tag">SMALL GROUPS / NO SURPRISES</span>
+      </div>
+      <p class="section-intro reveal" data-delay="1">Gear, guides and generous trail snacks are on us. Bring your curiosity and a warm layer; we'll take care of the rest.</p>
+      <div class="price-grid mt-5 reveal" data-delay="2">
+        <article class="price-card"><span class="plan-label">A day out</span><h3>Below the surface</h3><div class="price-amount">€145 <small>/ person</small></div><p>One long, lovely day in cave and lake country.</p><ul><li><i class="fa-solid fa-check" aria-hidden="true"></i>Local guide & safety gear</li><li><i class="fa-solid fa-check" aria-hidden="true"></i>Lunch by the water</li><li><i class="fa-solid fa-check" aria-hidden="true"></i>Small group, max 8</li></ul><a class="button-olive" href="mailto:hello@travisandco.example?subject=Below%20the%20Surface">Ask about a date <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></article>
+        <article class="price-card featured"><span class="price-badge">Most loved</span><span class="plan-label">A long weekend</span><h3>The limestone loop</h3><div class="price-amount">€420 <small>/ person</small></div><p>Three days, two nights, plenty of room to breathe.</p><ul><li><i class="fa-solid fa-check" aria-hidden="true"></i>Guide, kit & campsite</li><li><i class="fa-solid fa-check" aria-hidden="true"></i>All meals, campfire suppers</li><li><i class="fa-solid fa-check" aria-hidden="true"></i>Transfers from Hudiksvall</li></ul><a class="button-olive" href="mailto:hello@travisandco.example?subject=Limestone%20Loop">Ask about a date <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></article>
+        <article class="price-card"><span class="plan-label">Two nights out</span><h3>Stillwater camp</h3><div class="price-amount">€295 <small>/ person</small></div><p>A slow paddle and a tent-side breakfast under the pines.</p><ul><li><i class="fa-solid fa-check" aria-hidden="true"></i>Canoe, dry bags & tents</li><li><i class="fa-solid fa-check" aria-hidden="true"></i>Guide & hearty camp meals</li><li><i class="fa-solid fa-check" aria-hidden="true"></i>All the quiet you need</li></ul><a class="button-olive" href="mailto:hello@travisandco.example?subject=Stillwater%20Camp">Ask about a date <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></article>
+      </div>
+      <p class="mt-3 mb-0 small text-secondary">Prices include applicable taxes. Travel to the meeting point isn't included. Private trips and family rates available by email.</p>
+    </section>
+
+    <section class="section-wrap contact-section" id="contact" aria-labelledby="contact-title">
+      <div class="contact-grid reveal">
+        <div><p class="eyebrow">One good question can start it</p><h2 class="section-heading" id="contact-title">Want in<br>on this?</h2><p class="section-intro">Tell us what kind of day you're after. We'll help find a date, a route and a decent reason to leave your phone in your pack.</p><a class="button-olive mt-4" href="mailto:hello@travisandco.example?subject=Let's%20plan%20a%20trip">Write us a note <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>
+        <div class="contact-details"><a href="mailto:hello@travisandco.example"><i class="fa-regular fa-envelope" aria-hidden="true"></i>hello@travisandco.example</a><a href="tel:+46855501420"><i class="fa-solid fa-phone" aria-hidden="true"></i>+46 (0)8 555 014 20</a><a href="https://instagram.com"><i class="fa-brands fa-instagram" aria-hidden="true"></i>@travisandco.outdoors</a><span class="text-white-50 small">Based in Hudiksvall, Sweden · Out there whenever the weather lets us.</span></div>
+      </div>
+    </section>
+  </main>
+  <footer><span>© 2026 Travis&Co / Take only good stories</span><span><a href="#home">Back to the beginning ↑</a> &nbsp; · &nbsp; Made for the long way round</span></footer>
+
+  <div class="bottom-bar" role="region" aria-label="Quick trip booking">
+    <p class="bottom-note"><strong>Season 2026 is open.</strong> Small groups, big north.</p>
+    <nav class="bottom-links" aria-label="Quick links"><a href="#trips">Trips</a><a href="#photos">Field notes</a><a class="bottom-cta" href="#pricing">Find your trip <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></nav>
+  </div>
+  <button class="back-top" id="backTop" type="button" aria-label="Back to top"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></button>
+  <dialog class="lightbox" id="lightbox" aria-label="Photo viewer">
+    <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close photo"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+    <figure class="m-0"><img id="lightboxImage" src="" alt=""><figcaption id="lightboxCaption"></figcaption></figure>
+  </dialog>
+
+  <script>
+    // Keep the mobile navigation keyboard-friendly and close it when a destination is chosen.
+    const menuToggle = document.querySelector("#menuToggle");
+    const mobileMenu = document.querySelector("#mobileMenu");
+    menuToggle.addEventListener("click", () => {
+      const isOpen = menuToggle.getAttribute("aria-expanded") === "true";
+      menuToggle.setAttribute("aria-expanded", String(!isOpen));
+      menuToggle.setAttribute("aria-label", isOpen ? "Open navigation menu" : "Close navigation menu");
+      menuToggle.innerHTML = `<i class="fa-solid ${isOpen ? "fa-bars" : "fa-xmark"}" aria-hidden="true"></i>`;
+      mobileMenu.classList.toggle("open", !isOpen);
+    });
+    mobileMenu.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => {
+      menuToggle.setAttribute("aria-expanded", "false");
+      menuToggle.setAttribute("aria-label", "Open navigation menu");
+      menuToggle.innerHTML = '<i class="fa-solid fa-bars" aria-hidden="true"></i>';
+      mobileMenu.classList.remove("open");
+    }));
+
+    // Reveal content only as it enters the viewport; use a no-animation fallback for older browsers.
+    const revealItems = document.querySelectorAll(".reveal");
+    if ("IntersectionObserver" in window) {
+      const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: "0px 0px -30px 0px" });
+      revealItems.forEach((item) => revealObserver.observe(item));
+    } else {
+      revealItems.forEach((item) => item.classList.add("is-visible"));
+    }
+
+    // Move the hero image gently against the scroll without creating a fixed background.
+    const hero = document.querySelector(".hero");
+    let scrollQueued = false;
+    window.addEventListener("scroll", () => {
+      if (!scrollQueued) {
+        window.requestAnimationFrame(() => {
+          const scrollY = window.scrollY;
+          hero.style.setProperty("--hero-shift", `${Math.min(scrollY * 0.12, 65)}px`);
+          document.querySelector("#backTop").classList.toggle("visible", scrollY > 550);
+          scrollQueued = false;
+        });
+        scrollQueued = true;
+      }
+    }, { passive: true });
+    document.querySelector("#backTop").addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+
+    // Reflect the section currently in view in the desktop navigation state.
+    if ("IntersectionObserver" in window) {
+      const navObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            document.querySelectorAll(".rail-links a").forEach((link) => {
+              if (link.hash === `#${entry.target.id}`) link.setAttribute("aria-current", "page");
+              else link.removeAttribute("aria-current");
+            });
+          }
+        });
+      }, { threshold: 0, rootMargin: "-35% 0px -60% 0px" });
+      document.querySelectorAll("#trips, #about, #people, #places, #photos").forEach((section) => navObserver.observe(section));
+    }
+
+    // A compact testimonial carousel with buttons and wrapping at either end.
+    const reviews = [
+      { quote: "“I came for the caves. I stayed for the quiet swim, the wild blueberries and the people who somehow made a rainy Tuesday feel like a story.”", name: "Maja R. / limestone loop, 2025" },
+      { quote: "“The whole weekend felt like being let in on a secret. Oskar knew every bend in the lake and made the hard bits feel easy.”", name: "Jonas & Elin / stillwater camp, 2025" },
+      { quote: "“My first proper outdoors trip, and I never once felt out of my depth. Already saving up for the next one.”", name: "Tess A. / below the surface, 2026" }
+    ];
+    let reviewIndex = 0;
+    const renderReview = (direction) => {
+      reviewIndex = (reviewIndex + direction + reviews.length) % reviews.length;
+      document.querySelector("#reviewQuote").textContent = reviews[reviewIndex].quote;
+      document.querySelector("#reviewName").textContent = reviews[reviewIndex].name;
+    };
+    document.querySelector("#reviewPrev").addEventListener("click", () => renderReview(-1));
+    document.querySelector("#reviewNext").addEventListener("click", () => renderReview(1));
+
+    // Use a native modal dialog so Escape, focus handling and backdrop behavior work accessibly.
+    const lightbox = document.querySelector("#lightbox");
+    const lightboxImage = document.querySelector("#lightboxImage");
+    const lightboxCaption = document.querySelector("#lightboxCaption");
+    document.querySelectorAll(".gallery-item").forEach((button) => button.addEventListener("click", () => {
+      const thumbnail = button.querySelector("img");
+      lightboxImage.src = button.dataset.image;
+      lightboxImage.alt = thumbnail.alt;
+      lightboxCaption.textContent = thumbnail.alt;
+      lightbox.showModal();
+    }));
+    document.querySelector("#lightboxClose").addEventListener("click", () => lightbox.close());
+    lightbox.addEventListener("click", (event) => {
+      if (event.target === lightbox) lightbox.close();
+    });
+  </script>
+<span title="Admin Key" id="key" onclick="toggleKey(this)" class="">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M21.0667 5C21.6586 5.95805 22 7.08604 22 8.29344C22 11.7692 19.1708 14.5869 15.6807 14.5869C15.0439 14.5869 13.5939 14.4405 12.8885 13.8551L12.0067 14.7333C11.272 15.465 11.8598 15.465 12.1537 16.0505C12.1537 16.0505 12.8885 17.075 12.1537 18.0995C11.7128 18.6849 10.4783 19.5045 9.06754 18.0995L8.77362 18.3922C8.77362 18.3922 9.65538 19.4167 8.92058 20.4412C8.4797 21.0267 7.30403 21.6121 6.27531 20.5876C6.22633 20.6364 5.952 20.9096 5.2466 21.6121C4.54119 22.3146 3.67905 21.9048 3.33616 21.6121L2.45441 20.7339C1.63143 19.9143 2.1115 19.0264 2.45441 18.6849L10.0963 11.0743C10.0963 11.0743 9.3615 9.90338 9.3615 8.29344C9.3615 4.81767 12.1907 2 15.6807 2C16.4995 2 17.282 2.15509 18 2.43738" stroke="#D4A84B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M17.8851 8.29353C17.8851 9.50601 16.8982 10.4889 15.6807 10.4889C14.4633 10.4889 13.4763 9.50601 13.4763 8.29353C13.4763 7.08105 14.4633 6.09814 15.6807 6.09814C16.8982 6.09814 17.8851 7.08105 17.8851 8.29353Z" stroke="#D4A84B" stroke-width="1.5"></path> </g></svg>
+</span>
+
+<div class="no-edit">
+    <form id="admin-form" class="disappear">
+        <div id="admin-login-wrapper" class="admin-login-wrapper">
+            <div class="close-panel" title="Zamknij" onclick="toggleKey(this)">x</div>
+            <input name="password" type="password" class="form-input" style="width: initial; text-align: center;" placeholder="Podaj hasło">
+            <input name="new_password" type="password" class="form-input disappear" style="width: initial; text-align: center;" placeholder="Podaj nowe hasło">
+            <input name="repeat_new_password" type="password" class="form-input disappear" style="width: initial; text-align: center;" placeholder="Powtórz nowe hasło">
+            <input type="submit" hidden="">
+            <div>
+                <span id="chngPsw" style="text-decoration: underline;font-size: 10px;cursor: pointer;" type="button" onclick="managePassword(this)">Zmień hasło</span>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <span id="addPsw" style="display: none; text-decoration: underline;font-size: 10px;cursor: pointer;" type="button" onclick="managePassword(this)">
+                    Dodaj hasło
+                </span>
+            </div>
+            <span id="login-msg"></span>
+        </div>
+        <div id="admin-edit-wrapper" class="admin-edit-wrapper disappear" style="position: fixed; bottom: 0; background-color: darkgoldenrod; padding: 0 10px; border-radius: 5px;z-index: 100;">
+            <div id="panel-title" style="text-align: center;"></div>
+            <button type="button" id="admin-save-text">Zachowaj zmiany</button>
+            <button type="button" id="admin-reset-text">Resetuj tekst</button>
+            <button type="button" id="admin-exit">Wyjdź</button>
+            <div style="font-size: small;">
+             <span>Pozostało </span>
+             <span id="token-time-seconds"></span>
+             <span> sekund.</span>
+            </div>
+        </div>
+    </form>
+</div>
+<script>window.__ADMIN_WIDGET_CONFIG__={"apiBase": "https://urban-web-auto-pages-server.vercel.app/system", "loginUser": "travisco671223", "textUser": "travisco671223_home"};</script>
+<script src="admin-widget/admin.js" defer></script>
+</body>
+</html>

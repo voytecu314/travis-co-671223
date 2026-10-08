@@ -1,0 +1,45 @@
+#key {
+	position: fixed;
+	right: 16px;
+	bottom: 16px;
+	z-index: 100;
+	opacity: 0;
+	cursor: pointer;
+	transition: opacity .9s ease, transform .9s ease;
+}
+
+#key:hover {
+	opacity: 1;
+	transform: rotate(60deg);
+}
+
+.disappear {
+	display: none !important;
+}
+
+#admin-form {
+	position: relative;
+	display: grid;
+	place-items: center;
+}
+
+.admin-login-wrapper {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.close-panel {
+	display: grid;
+	place-items: center;
+	width: 15px;
+	height: 15px;
+	border: 1px solid gray;
+	border-radius: 50%; 
+	font-size: 10px;
+	line-height: 13px;
+	text-align: center;
+  	cursor: pointer;
+}
